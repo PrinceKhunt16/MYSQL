@@ -1,0 +1,453 @@
+CREATE DATABASE org;
+SHOW DATABASES;
+USE org;
+
+CREATE TABLE Worker (
+	WORKER_ID INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+	FIRST_NAME CHAR(25),
+	LAST_NAME CHAR(25),
+	SALARY INT(15),
+	JOINING_DATE DATETIME,
+	DEPARTMENT CHAR(25)
+);
+
+INSERT INTO Worker 
+	(WORKER_ID, FIRST_NAME, LAST_NAME, SALARY, JOINING_DATE, DEPARTMENT) VALUES
+	(001, 'Menp', 'Arora', 300000, '14-10-20 09.00.00', 'HR'),
+    (002, 'Prince', 'Khunt', 1000000, '14-05-19 09.00.00', 'CEO'),
+    (003, 'Nitya', 'Raj', 200000, '14-04-20 09.00.00', 'SDE'),
+    (004, 'Raja', 'Bhoj', 200000, '14-03-20 09.00.00', 'SDE'),
+    (005, 'Guru', 'Ran', 200000, '14-03-20 09.00.00', 'SDE');
+    
+SELECT * FROM Worker;
+
+CREATE TABLE Bonus (
+	WORKER_REF_ID INT,
+    BONUS_AMOUNT INT(10),
+    BONUS_DATE DATETIME,
+    FOREIGN KEY (WORKER_REF_ID)
+	REFERENCES Worker(WORKER_ID)
+    ON DELETE CASCADE
+);
+
+INSERT INTO Bonus 
+	(WORKER_REF_ID, BONUS_AMOUNT, BONUS_DATE) VALUES
+	(001, 5000, '16-08-20'),
+    (002, 5000, '16-08-20'),
+    (003, 5000, '16-08-20'),
+    (004, 5000, '16-08-20'),
+    (005, 5000, '16-08-20');
+    
+SELECT * FROM Bonus;
+
+CREATE TABLE Title (
+	WORKER_REF_ID INT,
+    WORKER_TITLE CHAR(25),
+    AFFECTED_FROM DATETIME,
+    FOREIGN KEY (WORKER_REF_ID)
+	REFERENCES Worker(WORKER_ID)
+    ON DELETE CASCADE
+);
+
+INSERT INTO Title 
+	(WORKER_REF_ID, WORKER_TITLE, AFFECTED_FROM) VALUES
+    (001, 'Manager', '2016-02-20 00:00:00'),
+	(002, 'Executive', '2016-02-20 00:00:00'),
+    (003, 'Lead', '2016-02-20 00:00:00');
+
+
+
+
+
+SELECT * FROM Worker WHERE SALARY >= 300000;
+
+SELECT * FROM Worker WHERE DEPARTMENT = 'SDE';
+
+-- SALARY [300000, 100000]
+
+SELECT * FROM Worker WHERE SALARY BETWEEN 300000 AND 1000000;
+
+-- REDUCE OR STATEMENTS
+
+SELECT * FROM Worker WHERE DEPARTMENT = 'HR' OR DEPARTMENT = 'CEO' OR DEPARTMENT = 'SDE';
+
+-- BATTER WAY INSTEAD OF OR COMMAND
+
+SELECT * FROM Worker WHERE DEPARTMENT IN ('HR', 'CEO', 'SDE');
+
+SELECT * FROM Worker WHERE DEPARTMENT NOT IN ('HR', 'CEO');
+
+SELECT * FROM Worker;
+
+SELECT * FROM Worker WHERE FIRST_NAME LIKE '%i%';
+
+-- SORTING
+
+SELECT * FROM Worker ORDER BY SALARY DESC;
+
+-- DISTINCT
+
+SELECT DISTINCT DEPARTMENT FROM Worker;
+
+-- GROUP BY
+
+SELECT DEPARTMENT, COUNT(DEPARTMENT) FROM WORKER GROUP BY DEPARTMENT;
+
+-- AVG SALARY PER DEPARTMENT
+
+SELECT DEPARTMENT, AVG(SALARY) FROM WORKER GROUP BY DEPARTMENT;
+
+-- MIN 
+
+SELECT DEPARTMENT, MIN(SALARY) FROM WORKER GROUP BY DEPARTMENT;
+
+-- MAX AGGRIGATION
+
+SELECT DEPARTMENT, MAX(SALARY) FROM WORKER GROUP BY DEPARTMENT;
+
+-- SUM AGGRIGATION
+
+SELECT DEPARTMENT, SUM(SALARY) FROM WORKER GROUP BY DEPARTMENT;
+
+
+
+
+
+CREATE database temp;
+
+USE temp;
+
+CREATE TABLE Customer (
+	id integer PRIMARY KEY,
+    cname varchar(255),
+    Address varchar(255),
+    Gender char(2),
+    City varchar(225),
+    Pincode integer
+);
+
+INSERT INTO Customer 
+VALUES (12, 'Ram', 'Dilbangh Nagar', 'M', 'Jalandhar', 121212),
+	   (13, 'Mohan', 'Divine Banglows', 'M', 'Panjab', 131313),
+       (14, 'Guru', 'Ravindra Soc', 'M', 'Gujarat', 141414),
+       (15, 'Helly', 'Shahajaha Nagar', 'M', 'Ludiyana', 151515);
+       
+CREATE TABLE Order_details (
+	Order_id integer PRIMARY KEY,
+    Delivery_date DATE,
+    Cust_id INT,
+    FOREIGN KEY(Cust_id) references Customer(id)
+);
+
+INSERT INTO Order_details
+    VALUES (1, '2019-03-11', 12);
+
+
+
+
+
+USE temp;
+
+CREATE TABLE Account(
+	id int primary key,
+    name varchar(255) UNIQUE,
+    balance INT,
+    CONSTRAINT acc_balance_chk CHECK(balance > 1000)
+);
+
+INSERT INTO Account(id, name, balance)
+	VALUES (1, 'A', 10000);
+    
+INSERT INTO Account(id, name, balance)
+	VALUES (2, 'B', 100);
+
+INSERT INTO Account(id, name, balance)
+	VALUES (3, 'B', 1000);
+    
+SELECT * FROM Account;
+
+
+
+
+
+USE temp;
+
+CREATE TABLE Account(
+	id int primary key,
+    name varchar(255) UNIQUE,
+    balance INT NOT NULL DEFAULT 0
+);
+
+INSERT INTO Account(id, name, balance)
+	VALUES (1, 'A', 10000);
+    
+INSERT INTO Account(id, name)
+	VALUES (2, 'B');
+    
+SELECT * FROM Account;
+
+
+
+
+
+-- ADD NEW COLUMN
+
+ALTER TABLE Account ADD interest FLOAT NOT NULL DEFAULT 0;
+
+-- MODIFY COLUMN
+
+ALTER TABLE Account MODIFY interest DOUBLE NOT NULL DEFAULT 0;
+
+-- DESCRIBE TABLE
+
+DESC Account;
+
+-- RENAME COLUMN
+
+ALTER TABLE Account CHANGE COLUMN interest saving_interest FLOAT NOT NULL DEFAULT 0;
+
+-- DROP COLUMN
+
+ALTER TABLE Account DROP COLUMN saving_interest;
+
+-- RENAME TABLE
+
+ALTER TABLE Account RENAME TO Account_details;
+
+
+
+
+
+-- INSERT IN TABLE (DML)
+
+INSERT INTO Customer(id, cname, Address, Gender, City, Pincode)
+    VALUES (16, 'Ram', 'Dilbangh Nagar', 'M', 'Jalandhar', 161616);
+
+INSERT INTO Customer VALUES (17, 'Prince', 'Yoginagar Soc', 'M', 'Gujarat', 171717);
+
+INSERT INTO Customer(id, cname)	
+	VALUES(18, 'Bob');
+
+-- UPDATE IN TABLE 
+
+UPDATE Customer SET Address = 'Mumbai', Gender = 'M' WHERE id = 18;
+
+SET SQL_SAFE_UPDATES = 0;
+
+UPDATE Customer SET Pincode = 110000;
+UPDATE Customer SET Age += 1
+
+SET SQL_SAFE_UPDATES = 1;
+
+-- DELETE IN TABLE
+
+DELETE FROM Customer WHERE id = 18;
+
+DELETE FROM Customer;
+
+-- REPLACE IN TABLE
+
+REPLACE INTO Customer(id, City)
+	VALUES(16, 'Mumbai');
+
+REPLACE INTO Customer(id, City)
+	VALUES(20, 'Mumbai');
+
+REPLACE INTO Customer SET id = 16, cname = 'Laxman', city = 'Rampura';
+
+REPLACE INTO Customer(id, cname, City)
+    SELECT id, cname, City
+    FROM Customer WHERE id = 16;
+
+
+
+
+
+-- ON DELETE CASCADE 
+
+CREATE TABLE Order_details (
+	Order_id integer PRIMARY KEY,
+    Delivery_date DATE,
+    Cust_id INT,
+    FOREIGN KEY(Cust_id) references Customer(id) ON DELETE CASCADE
+);
+
+INSERT INTO Customer(id, cname, Address, Gender, City, Pincode)
+    VALUES (16, 'Ram', 'Dilbangh Nagar', 'M', 'Jalandhar', 161616);
+    
+INSERT INTO Order_details
+	VALUES (1, '2019-03-11', 16);
+
+INSERT INTO Order_details
+	VALUES (2, '2019-03-12', 16);
+    
+DELETE FROM Customer WHERE id = 16;
+
+
+
+
+
+-- ON DELETE SET NULL
+
+CREATE TABLE Order_details (
+	Order_id integer PRIMARY KEY,
+    Delivery_date DATE,
+    Cust_id INT,
+    FOREIGN KEY(Cust_id) references Customer(id) ON DELETE SET NULL
+);
+
+INSERT INTO Customer(id, cname, Address, Gender, City, Pincode)
+    VALUES (16, 'Ram', 'Dilbangh Nagar', 'M', 'Jalandhar', 161616);
+    
+INSERT INTO Order_details
+	VALUES (1, '2019-03-11', 16);
+
+INSERT INTO Order_details
+	VALUES (2, '2019-03-12', 16);
+    
+DELETE FROM Customer WHERE id = 16;
+
+
+
+
+
+-- JOINS
+
+CREATE TABLE Employee (
+	id integer PRIMARY KEY,
+    fname varchar(255),
+    lname varchar(255),
+    Age integer,
+    email varchar(255),
+    PhoneNo integer,
+    City varchar(225)
+);
+
+INSERT INTO Employee(id, fname, lname, Age, email, PhoneNo, City) 
+VALUES (1, 'Aman', 'Proto', 32, 'aman@gmail.com', 121212, 'Delhi'),
+	   (2, 'Yagya', 'Narayan', 44, 'yagya@gmail.com', 131313, 'Palam'),
+       (3, 'Rahul', 'BD', 22, 'rahul@gmail.com', 141414, 'Kolkata'),
+       (4, 'Jatin', 'Hermit', 31, 'jatin@gmail.com', 141414, 'Raipur'),
+       (5, 'PK', 'Pandey', 21, 'pk@gmail.com', 151515, 'Jaipur');
+
+CREATE TABLE Project (
+	id integer PRIMARY KEY,
+    empID integer,
+    name varchar(255),
+    startdate DATE,
+    clientID integer
+);
+
+INSERT INTO Project(id, empID, name, startdate, clientID)
+VALUES (1, 1, 'A', '2021-04-21', 3),
+	   (2, 2, 'B', '2021-04-21', 1),
+       (3, 3, 'C', '2021-04-21', 5),
+       (4, 3, 'D', '2021-04-21', 2),
+       (5, 5, 'E', '2021-04-21', 4);
+		   
+CREATE TABLE Client (
+	id integer PRIMARY KEY,
+    first_name varchar(255),
+    last_name varchar(255),
+    age integer,
+    emailId varchar(255),
+    PhoneNo integer,
+    City varchar(225),
+    empID integer
+);
+
+INSERT INTO Client(id, first_name, last_name, age, emailID, PhoneNo, City, empID) 
+    VALUES (1, 'Mac', 'Rogers', 47, 'mac@gmail.com', 232, 'kolkata', 3),
+	       (2, 'Max', 'Poirir', 27, 'max@gmail.com', 451, 'kolkata', 3),
+           (3, 'Peter', 'Jain', 24, 'peter@gmail.com', 7871, 'Mumbai', 1),
+           (4, 'Sushant', 'Aggarwal', 23, 'shushant@gmail.com', 78244, 'Raipur', 5),
+           (5, 'Pratap', 'Singh', 36, 'pratap@gmail.com', 22356, 'Surat', 2);
+
+-- INNER JOIN
+
+SELECT e.id, e.fname, e.lname, p.id , p.name FROM Employee as e
+	INNER JOIN Project as p ON e.id = p.empID;
+    
+SELECT * FROM Employee as e
+	INNER JOIN Project as p ON e.id = p.empID;
+
+SELECT e.id, e.email, e.PhoneNo, c.first_name, c.last_name FROM Employee as e
+	INNER JOIN Client as c ON e.id = c.empID WHERE e.City = 'Kolkata' AND c.City = 'Kolkata';
+
+SELECT e.id, e.fname, e.lname, p.id, p.name FROM Employee as e,
+	Project as p WHERE e.id = p.empID;
+
+-- LEFT JOIN
+
+SELECT * from Employee as e
+	LEFT JOIN Project p ON e.id = p.empID; 
+
+-- RIGHT JOIN
+
+SELECT p.id, p.name, e.fname, e.lname, e.email FROM Employee as e
+	RIGHT JOIN Project as p ON e.id = p.empID;
+
+-- CROSS JOIN
+
+SELECT e.fname, e.lname, p.id, p.name FROM Employee as e
+	CROSS JOIN Project as p;
+
+
+
+
+
+-- SET OPETATIONS
+
+CREATE TABLE Department1 (
+	empid integer PRIMARY KEY,
+    name varchar(255),
+    role varchar(255)
+);
+
+CREATE TABLE Department2 (
+	empid integer PRIMARY KEY, 
+    name varchar(255),
+    role varchar(255)
+);
+
+INSERT INTO Department1(empid, name, role)
+	VALUES (1, 'A', 'engineer'),
+		   (2, 'B', 'salesman'),
+           (3, 'C', 'manager'),
+           (4, 'D', 'salesman'),
+           (5, 'E', 'engineer');
+
+INSERT INTO Department2(empid, name, role)
+	VALUES (3, 'C', 'manager'),
+           (6, 'F', 'marketing'),
+           (7, 'G', 'salesman');
+
+-- UNION
+
+SELECT * FROM Department1 UNION SELECT * FROM Department2;
+
+SELECT * FROM Department1 WHERE role = 'salesman' UNION SELECT * FROM Department2 WHERE role = 'salesman';
+
+-- INTERSECT
+
+SELECT Department1.* FROM Department1 INNER JOIN Department2 USING(empid);
+
+-- MINUS
+
+SELECT Department1.* FROM Department1 LEFT JOIN Department2 USING(empid);
+
+
+
+
+
+-- SUB QUERIES
+
+SELECT * FROM Employee WHERE age IN (SELECT age FROM Employee WHERE age > 30);
+
+SELECT * FROM Employee WHERE id in (
+	SELECT empID FROM Project GROUP BY empID HAVING COUNT(empID) > 1
+);
+
+SELECT * FROM Employee WHERE age > (SELECT avg(age) FROM Employee);
+
+SELECT * FROM Employee e1 WHERE 3 = (SELECT COUNT(e2.age) FROM Employee e2 WHERE e2.age >= e1.age);
